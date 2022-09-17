@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -21,25 +18,26 @@ model Candidates {
 }
 
 model Applications {
-  candidate       Candidates        @relation(fields: [candidateId], references: [id])
-  candidateId     Int               @id @unique
-  resume String?
+  candidateId          Int                    @id @unique @default(autoincrement())
+  resume               String?
+  candidate            Candidates             @relation(fields: [candidateId], references: [id])
   applicationResponses ApplicationResponses[]
 }
 
 model ApplicationResponses {
-  id             Int          @id @default(autoincrement())
-  questions      Questions    @relation(fields: [questionId], references: [id])
-  questionId     Int          
-  userAnswer     String?
-  comment        String?
-  application   Applications @relation(fields: [applicationId], references: [candidateId])
+  id            Int          @id @default(autoincrement())
+  questionId    Int
+  userAnswer    String?
+  comment       String?
   applicationId Int
-  @@unique([questionId,applicationId], name: "app_info_unique_fks")
+  application   Applications @relation(fields: [applicationId], references: [candidateId])
+  questions     Questions    @relation(fields: [questionId], references: [id])
+
+  @@unique([questionId, applicationId], name: "app_info_unique_fks")
 }
 
 model Questions {
-  id              Int              @id @default(autoincrement())
-  question        String
+  id                   Int                    @id @default(autoincrement())
+  question             String
   applicationResponses ApplicationResponses[]
 }
